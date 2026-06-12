@@ -29,6 +29,7 @@ jobs:
       - name: Build Windows installer
         shell: powershell
         run: |
+          Invoke-WebRequest -Uri "https://aka.ms/vs/17/release/vc_redist.x64.exe" -OutFile packaging\windows\vc_redist.x64.exe
           Push-Location packaging\windows
           & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" image-jakdu.nsi
           Pop-Location

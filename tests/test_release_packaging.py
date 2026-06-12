@@ -49,3 +49,18 @@ def test_windows_installer_script_packages_pyinstaller_exe() -> None:
     assert '!define SOURCE_EXE "..\\..\\dist\\ImageJakdu.exe"' in installer
     assert 'File "${SOURCE_EXE}"' in installer
     assert "CreateShortCut" in installer
+
+
+def test_windows_installer_installs_runtime_prerequisite() -> None:
+    # Given: Windows users should not manually install runtime dependencies.
+    installer_path = ROOT / "packaging/windows/image-jakdu.nsi"
+
+    # When: the NSIS script is inspected.
+    installer = installer_path.read_text(encoding="utf-8")
+
+    # Then: the installer elevates and installs the VC++ runtime before app files.
+    assert "RequestExecutionLevel admin" in installer
+    assert "vc_redist.x64.exe" in installer
+    assert "/install /quiet /norestart" in installer
+    workflow = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+    assert "https://aka.ms/vs/17/release/vc_redist.x64.exe" in workflow

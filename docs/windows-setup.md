@@ -6,15 +6,28 @@ Ordinary processing stays local and must not call cloud AI services.
 ## Prerequisites
 
 - Windows 10 or Windows 11
-- Python 3.11+
-- `uv` for project execution
-- Docker Desktop for the local Ollama intent model
+- For normal users: download and run `ImageJakdu-0.1.0-windows-installer.exe`
+- The installer includes the app and installs the Microsoft Visual C++ Runtime
+- Python 3.11+ and `uv` are only needed for development from source
+- Docker Desktop is only needed for the optional local Ollama intent model
 - Enough disk space for Ollama and rembg/U2-Net model caches
-- Optional: a later PyInstaller executable build
+
+## Install From Release
+
+For ordinary Windows use, install from the GitHub release:
+
+1. Download `ImageJakdu-0.1.0-windows-installer.exe`.
+2. Run it and approve the Windows administrator prompt.
+3. Launch Image Jakdu from the Start Menu or Desktop shortcut.
+
+The installer places Image Jakdu under `Program Files`, creates shortcuts, and
+installs the bundled Microsoft Visual C++ Runtime. Users do not need to install
+Python, `uv`, or PySide6.
 
 ## Install And Test
 
-Run these commands from the project directory in PowerShell:
+For development from source, run these commands from the project directory in
+PowerShell:
 
 ```powershell
 uv run --extra dev python -m pytest -q
@@ -75,21 +88,22 @@ LLM service.
 
 ## Packaging Path
 
-The intended Windows packaging path is PyInstaller after the GUI, local model
-fallbacks, smoke fixtures, and final verification pass.
+The Windows release packaging path is PyInstaller plus NSIS.
 
-Planned packaging command shape:
+The GitHub release workflow builds `ImageJakdu.exe`, downloads the Microsoft
+Visual C++ Runtime redistributable, bundles it into the NSIS installer, and
+publishes both files to the release.
 
 ```powershell
-uv run --extra dev pyinstaller --name ImageJakdu --windowed path\to\launcher.py
+uv run --extra dev pyinstaller --noconfirm --clean --windowed --onefile --name ImageJakdu src/image_jakdu/__main__.py
 ```
-
-Do not present this as a finished installer. Windows installer is not built yet.
 
 ## Troubleshooting
 
 - Docker Desktop not running: start Docker Desktop, then rerun
   `docker compose up -d ollama`.
+- Windows asks for administrator approval: approve it so the bundled Microsoft
+  Visual C++ Runtime can be installed.
 - Ollama endpoint unavailable: check `http://localhost:11434/api/tags` and use
   manual bypass if needed.
 - Slow first model run: warm `qwen2.5:1.5b-instruct` before starting a GUI job.

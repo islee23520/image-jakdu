@@ -36,13 +36,22 @@ cd C:\path\to\image-jakdu
 
 필요한 도구:
 
-- Python 3.11 이상
-- `uv`
-- Docker Desktop: 로컬 LLM을 사용할 때 필요
+- 일반 사용자: `ImageJakdu-0.1.0-windows-installer.exe`만 실행하면 됩니다.
+- Python 3.11 이상과 `uv`는 소스에서 개발할 때만 필요합니다.
+- Docker Desktop은 로컬 LLM 기능을 사용할 때만 필요합니다.
 
-### 2. 의존성 확인
+### 일반 설치
 
-아래 명령으로 개발 의존성을 설치하고 테스트까지 확인합니다.
+GitHub Release에서 `ImageJakdu-0.1.0-windows-installer.exe`를 내려받아
+실행합니다. 설치 중 Windows 관리자 권한 확인이 뜨면 승인하세요.
+
+설치 파일은 Image Jakdu와 Microsoft Visual C++ Runtime을 함께 설치하고,
+시작 메뉴와 바탕화면 바로가기를 만듭니다. 일반 사용자는 Python, `uv`,
+PySide6를 따로 설치할 필요가 없습니다.
+
+### 2. 개발 의존성 확인
+
+소스에서 개발하거나 테스트할 때만 아래 명령을 실행합니다.
 
 ```powershell
 uv run --extra dev python -m pytest -q
